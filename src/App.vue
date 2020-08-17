@@ -60,5 +60,14 @@ h1, h2, h3 {
   padding: 10px 20px;
   border: none;
   cursor: pointer;
+  &_list {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    margin-left: 80px;
+  }
+  &_task {
+    margin-left: 200px;
+  }
 }
 </style>

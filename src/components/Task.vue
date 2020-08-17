@@ -2,14 +2,19 @@
     <div class="task">
         <div class="container">
             <h1>List</h1>
-        <input type="text" class="task-input" placeholder="Что нужно сделать" v-model="newTodo" @keyup.enter="addTodo">
-        <div v-for="todo in todos" :key="todo.id" class="task-item">
-            <div>
+        <div v-for="(todo, index) in todos" :key="todo.id" class="task-item">
+            <input type="checkbox" v-model="todo.completed"> 
+            <div :class="{ completed : todo.completed }">
             {{ todo.title }}
             </div>
-            <div class="remove-item">
+            <div class="remove-item" @click="removeTodo(index)"> <!-- Удалить задачу -->
                 &times;
             </div>
+        </div>
+        <div class="line-container">
+            <input type="text" class="task-input" placeholder="Что нужно сделать" v-model="newTodo" @keyup.enter="addTodo"> <!-- Добавить задачу -->
+            <label for="task-input">Срочное<input name="task-input" type="checkbox"></label>
+            <button class="button button_task" type="submit" @click="addTodo">Добавить дело</button>
         </div>
         </div>
     </div>
@@ -17,6 +22,7 @@
 
 <script>
 export default {
+    name: 'task-list',
     data() {
         return {
             newTodo: '',
@@ -24,12 +30,12 @@ export default {
             todos: [
                 {
                     'id': 1,
-                    'title': 'Finish Vue Screencast',
+                    'title': 'Что-то важное',
                     'completed': false,
                 },
                 {
                     'id': 2,
-                    'title': 'Take over world',
+                    'title': 'Что-то определенно важное',
                     'completed': false,
                 },
             ]
@@ -48,12 +54,16 @@ export default {
 
             this.newTodo = ''
             this.idForTodo++
+        },
+        removeTodo(index) { // Удаляем элемент из массива с помощью splice
+            this.todos.splice(index, 1)
         }
     }
 }
 </script>
 
 <style scoped lang="scss">
+$easy-color: #FFC373;
 $medium-color: #BF8630;
 $shadow: 5px 5px 15px rgba(#000, 0.3);
 
@@ -64,20 +74,29 @@ $shadow: 5px 5px 15px rgba(#000, 0.3);
     height: 90vh;
     background-color: $medium-color;
     box-shadow: $shadow;
+    position: relative;
     &-input {
-        width: 100%;
+        width: 40%;
         padding: 10px 20px;
         box-shadow: $shadow;
         border: none;
         font-size: 16px;
-        margin-bottom: 10px;
+        margin-right: 30px;
     }
     &-item {
+        border: 1px solid $easy-color;
+        padding: 10px 20px;
         margin-bottom: 12px;
         display: flex;
         align-items: center;
         justify-content: space-between;
+        font-size: 24px;
     }
+}
+
+.completed {
+    text-decoration: line-through;
+    color: grey;
 }
 
 .remove-item {
@@ -91,6 +110,20 @@ $shadow: 5px 5px 15px rgba(#000, 0.3);
     width: 50%;
     display: block;
     margin: 0 auto;
+}
+
+.line-container {
+    padding: 10px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    border-top: 1px solid black;
+    position: relative;
+    top: 100px;
+}
+
+.button {
+    margin-left: 10px;
 }
 
 h1 {

@@ -7,7 +7,17 @@
                     <option value="done">Исполненные</option>
                     <option value="all">Все</option>
                 </select>
+                <div v-for="(list, index) in lists" :key="list.id" class="list-item">
+                    <div :class="{ completed : list.completed }">
+                    {{ list.title }}
+                    </div>
+                    <div class="remove-item" @click="removeTodo(index)"> <!-- Удалить задачу -->
+                        &times;
+                    </div>
+                </div>
             </div>
+            <input type="text" class="left-input" placeholder="Введите название списка" v-model="newList" @keyup.enter="addList"> <!-- Поле списка -->
+            <button class="button button_list" type="submit" @click="addList">Добавить список</button>
         </div>
         <Task></Task>
     </div>
@@ -16,13 +26,45 @@
 <script>
 import Task from "./Task"
 export default {
+    name: 'list',
     data() {
         return {
-            status: 'process'
+            newList: '',
+            status: 'process',
+            lists: [
+                {
+                    'id': 1,
+                    'title': 'Что-то важное',
+                    'completed': false,
+                },
+                {
+                    'id': 2,
+                    'title': 'Что-то определенно важное',
+                    'completed': false,
+                },
+            ]
         }
     },
     components: {
         Task
+    },
+    methods: {
+        addList() {
+            if (this.newList.trim().length == 0) { // Если нет пробельных символов в конце, то возращаем результат
+                return;
+            }
+            this.lists.push({
+                id: this.idForList,
+                title: this.newList,
+                completed: false,
+            })
+
+            this.newList = ''
+            this.idForList++
+        },
+        removeTodo(index) { // Удаляем элемент из массива с помощью splice
+            this.lists.splice(index, 1)
+        }
     }
 }
 </script>
@@ -30,6 +72,7 @@ export default {
 <style scoped lang="scss">
 $medium-color: #BF8630;
 $shadow: 5px 5px 15px rgba(#000, 0.3);
+$easy-color: #FFC373;
 
 .container {
   align-items: stretch;
@@ -43,6 +86,42 @@ $shadow: 5px 5px 15px rgba(#000, 0.3);
     height: 90vh;
     background-color: $medium-color;
     box-shadow: $shadow;
+    position: relative;
+    &-strain {
+        margin-top: 20px;
+        margin-bottom: 10px;
+        width: 98%;
+        margin-left: 4px;
+    }
+    &-input {
+        position: absolute;
+        bottom: 50px;
+        width: 315px;
+        margin-left: 4px;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        box-shadow: $shadow;
+    }
+}
+
+.list-item {
+    font-size: 18px;
+    border: 1px solid $easy-color;
+    padding: 10px 20px;
+    margin-bottom: 12px;
+    margin-left: 4px;    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 315px;
+}
+
+.remove-item {
+    position: absolute;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
 }
 
 </style>

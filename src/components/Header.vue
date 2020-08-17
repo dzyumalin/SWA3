@@ -25,7 +25,7 @@ $shadow: 5px 5px 15px rgba(#000, 0.3);
         margin-bottom: 15px;
         &__right {
             display: flex;
-            justify-content: center;
+            justify-content: end;
             align-items: center;
         }
         &__logo {

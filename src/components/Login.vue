@@ -1,6 +1,6 @@
 <template>
     <div class="overlay">
-        <form action="#" class="login">
+        <form action="#" class="login" @submit.prevent="sumbmitHandler">
             <h2 class="login__title">Авторизация</h2>
             <div class="login-block">
                 <div class="login-block__icon">
@@ -14,7 +14,7 @@
                 </div>
                 <input type="password" class="login-block__input" required placeholder="Password" v-model="password">
             </div>
-            <button class="button button_login" type="submit" @click.prevent="signin">Войти</button>
+            <button class="button button_login" type="submit">Войти</button>
         </form>
     </div>
 </template>
@@ -22,7 +22,20 @@
 <script>
 
 export default {
-    
+    name: 'login',
+    methods: {
+        async submitHandler() {
+            const formData = {
+            email: this.email,
+            password: this.password
+        }
+            try {
+                await this.$store.dispatch('login', formData)
+            }   catch (e) { 
+                //empty 
+            }
+        }
+    }
 }
 
 </script>
@@ -32,8 +45,10 @@ $easy-color: #FFC373;
 $dark-color: #BF8930;
 $shadow: 5px 5px 15px rgba(#000, 0.3);
 
+// .overlay {
+//     display: none;
+// }
 .login {
-    display: none;
     width: 500px;
     padding: 100px 50px;
     background-color: $easy-color;
