@@ -1,44 +1,24 @@
 <template>
   <div id="app">
-    <Login></Login>
-    <div class="app">
-      <Header></Header>
-      <List></List>
-    </div>
+    <Login/>
+    <router-view/>
   </div>
 </template>
-<!-- Можно использовать цикл после data, но можно использовать директиву v-for -->
 <script>
-
-import Login from "./components/Login"
-import List from "./components/List"
-import Header from "./components/Header";
-// import { data } from './data/dummy.data';
+import Login from './components/Login';
 export default {
+  name: 'App',
   components: {
-    Login,
-    List,
-    Header
-  },
-  computed: {
+    Login
   }
 };
 </script>
- 
-<style lang="scss">
+
+<style lang="scss" scoped>
 $easy-color: #FFC373;
-$medium-color: #BF8630;
-body {
-  margin: 0;
-  background-color: $easy-color;
-  font-family: "Roboto", sans-serif;
-}
-* {
-  box-sizing: border-box;
-}
-h1, h2, h3 {
-  margin: 0;
-}
+$dark-color: #BF8930;
+$shadow: 5px 5px 15px rgba(#000, 0.3);
+
 .overlay {
   position: fixed;
   top: 0;
@@ -50,24 +30,34 @@ h1, h2, h3 {
   align-items: center;
 }
 
-.container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.login {
+    width: 500px;
+    padding: 100px 50px;
+    background-color: $easy-color;
+    box-shadow: $shadow;
+    &__title {
+        text-align: center;
+        font-weight: 300;
+        margin-bottom: 40px;
+    }
+    &-block {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
 }
 
 .button {
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  &_list {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    margin-left: 80px;
-  }
-  &_task {
-    margin-left: 200px;
-  }
+    &_login {
+        display: block;
+        margin: 0 auto;
+        margin-top: 20px;
+    }
 }
+
+.error {
+  color: red;
+}
+
 </style>
+

@@ -25,6 +25,7 @@
 
 <script>
 import Task from "./Task"
+import namesRef from "./firebase";
 export default {
     name: 'list',
     data() {
@@ -59,12 +60,15 @@ export default {
                 completed: false,
             })
 
+            namesRef.push({ name: this.newList, edit: false})
+
             this.newList = ''
             this.idForList++
         },
         removeTodo(index) { // Удаляем элемент из массива с помощью splice
             this.lists.splice(index, 1)
-        }
+        },
+        
     }
 }
 </script>

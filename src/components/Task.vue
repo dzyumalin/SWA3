@@ -43,7 +43,7 @@ export default {
     },
     methods: {
         addTodo() {
-            if (this.newTodo.trim().length == 0) { // Если нет пробельных символов в конце, то возращаем результат
+            if (this.newTodo.trim().length == 0) { 
                 return;
             }
             this.todos.push({
@@ -55,7 +55,7 @@ export default {
             this.newTodo = ''
             this.idForTodo++
         },
-        removeTodo(index) { // Удаляем элемент из массива с помощью splice
+        removeTodo(index) { 
             this.todos.splice(index, 1)
         }
     }
