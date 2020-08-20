@@ -16,21 +16,25 @@
                     </div>
                 </div>
             </div>
-            <input type="text" class="left-input" placeholder="Введите название списка" v-model="newList" @keyup.enter="addList"> <!-- Поле списка -->
-            <button class="button button_list" type="submit" @click="addList">Добавить список</button>
+            <form v-on:submit.prevent="onSubmit">
+                <input type="text" class="left-input" placeholder="Введите название списка" v-model="text"> <!-- Поле списка -->
+                <button>Добавить список</button>
+            </form>
         </div>
         <Task></Task>
     </div>
 </template>
 
 <script>
-import Task from "./Task"
-import namesRef from "./firebase";
+import Task from "./Task";
+import * as firebase from "firebase/app";
+import "firebase/database";
+import "firebase/auth";
 export default {
     name: 'list',
     data() {
         return {
-            newList: '',
+            text: '',
             status: 'process',
             lists: [
                 {
@@ -50,6 +54,18 @@ export default {
         Task
     },
     methods: {
+        onSubmit() {
+            let db = firebase.database();
+            db.ref("/posts/" + Date.now()).set({
+                text: this.text    
+            }, (er) => {
+                if(er) {
+                    console.log(er.message);
+                } else {
+                    console.log('created');
+                }
+            });
+        },
         addList() {
             if (this.newList.trim().length == 0) { // Если нет пробельных символов в конце, то возращаем результат
                 return;
@@ -59,8 +75,6 @@ export default {
                 title: this.newList,
                 completed: false,
             })
-
-            namesRef.push({ name: this.newList, edit: false})
 
             this.newList = ''
             this.idForList++

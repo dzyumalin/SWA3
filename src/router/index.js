@@ -7,16 +7,16 @@ Vue.use(Router);
 let router = new Router({
   routes: [
     {
-      path: '/login',
-      name: 'login',
+      path: '/Login',
+      name: 'Login',
       component: () => import('../components/Login'),
       meta: {
         requiresGuest: true
       }
     },
     {
-      path: '/list',
-      name: 'list',
+      path: '/List',
+      name: 'List',
       component: () => import('../components/List'),
       meta: {
         requiresAuth: true
