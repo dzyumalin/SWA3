@@ -2,23 +2,18 @@
     <div class="container">
         <div class="left">
             <div class="left-strain">
-                <select name="strain" id="strain" class="left-strain__select" v-model="status">
+                <select name="strain" id="strain" class="left-strain__select">
                     <option value="process" selected>Неисполненные</option>
                     <option value="done">Исполненные</option>
                     <option value="all">Все</option>
                 </select>
-                <div v-for="(list, index) in lists" :key="list.id" class="list-item">
-                    <div :class="{ completed : list.completed }">
-                    {{ list.title }}
-                    </div>
-                    <div class="remove-item" @click="removeTodo(index)"> <!-- Удалить задачу -->
-                        &times;
-                    </div>
-                </div>
             </div>
-            <form v-on:submit.prevent="onSubmit">
+            <ul v-for="list in lists" :key="list.key">
+                <li v-on:click="selectList(list)">{{ list.item.text }}</li>
+            </ul>
+            <form v-show="key" v-on:submit.prevent="onUpdate">
                 <input type="text" class="left-input" placeholder="Введите название списка" v-model="text"> <!-- Поле списка -->
-                <button>Добавить список</button>
+                <button class="button button_list" type="submit" @click="onSubmit">Добавить список</button>
             </form>
         </div>
         <Task></Task>
@@ -34,29 +29,35 @@ export default {
     name: 'list',
     data() {
         return {
-            text: '',
-            status: 'process',
-            lists: [
-                {
-                    'id': 1,
-                    'title': 'Что-то важное',
-                    'completed': false,
-                },
-                {
-                    'id': 2,
-                    'title': 'Что-то определенно важное',
-                    'completed': false,
-                },
-            ]
+            lists: [],
+            text: "",
+            key: null
         }
+    },
+    mounted() {
+        let db = firebase.database();
+        let me = this;
+
+            db.ref('/lists').on('value', (snap) => {
+            let result = []
+            let data = snap.val();
+            for(let key in data){
+                result.push({ key: key, item: data[key] });
+            }
+            me.$set(me, 'lists', result);
+        });
     },
     components: {
         Task
     },
     methods: {
+        selectList(list){
+            this.key = list.key;
+            this.text = list.item.text;
+        },
         onSubmit() {
             let db = firebase.database();
-            db.ref("/posts/" + Date.now()).set({
+            db.ref("/lists/" + Date.now()).set({
                 text: this.text    
             }, (er) => {
                 if(er) {
@@ -66,18 +67,15 @@ export default {
                 }
             });
         },
-        addList() {
-            if (this.newList.trim().length == 0) { // Если нет пробельных символов в конце, то возращаем результат
-                return;
-            }
-            this.lists.push({
-                id: this.idForList,
-                title: this.newList,
-                completed: false,
+        onUpdate() {
+            let db = firebase.database();
+            db.ref("/lists/" + this.key).set({
+                text: this.text
+            }, (er) => {
+                console.log(er ? er.message : "updated");
             })
-
-            this.newList = ''
-            this.idForList++
+            this.key = null;
+            this.text = "";
         },
         removeTodo(index) { // Удаляем элемент из массива с помощью splice
             this.lists.splice(index, 1)

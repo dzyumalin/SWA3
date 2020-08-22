@@ -34,5 +34,5 @@ firebase.auth().onAuthStateChanged(() => {
   }
 });
 
-export const db = app.database();
-export const namesRef = db.ref('names');
+// export const db = app.database();
+// export const namesRef = db.ref('names');

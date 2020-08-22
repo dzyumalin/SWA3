@@ -2,58 +2,71 @@
     <div class="task">
         <div class="container">
             <h1>List</h1>
-        <div v-for="(todo, index) in todos" :key="todo.id" class="task-item">
-            <input type="checkbox" v-model="todo.completed"> 
-            <div :class="{ completed : todo.completed }">
-            {{ todo.title }}
-            </div>
-            <div class="remove-item" @click="removeTodo(index)"> <!-- Удалить задачу -->
-                &times;
-            </div>
-        </div>
-        <div class="line-container">
-            <input type="text" class="task-input" placeholder="Что нужно сделать" v-model="newTodo" @keyup.enter="addTodo"> <!-- Добавить задачу -->
-            <label for="task-input">Срочное<input name="task-input" type="checkbox"></label>
-            <button class="button button_task" type="submit" @click="addTodo">Добавить дело</button>
-        </div>
+            <ul v-for="todo in todos" :key="todo.key">
+                <li v-on:click="selectList(todo)">{{ todo.item.text }}</li>
+                <div class="remove-item">×</div>
+            </ul>
+            <form v-show="key" v-on:sumbit.prevent="onUpdate" class="line-container">
+                <input type="text" class="task-input" placeholder="Что нужно сделать" v-model="text"> <!-- Добавить задачу -->
+                <label for="task-input">Срочное<input name="task-input" type="checkbox"></label>
+                <button class="button button_task" type="submit" @click="onSubmit">Добавить дело</button>
+            </form>
         </div>
     </div>
 </template>
 
 <script>
+import * as firebase from "firebase/app";
+import "firebase/database";
+import "firebase/auth";
 export default {
     name: 'task-list',
     data() {
         return {
-            newTodo: '',
-            idForTodo: 3,
-            todos: [
-                {
-                    'id': 1,
-                    'title': 'Что-то важное',
-                    'completed': false,
-                },
-                {
-                    'id': 2,
-                    'title': 'Что-то определенно важное',
-                    'completed': false,
-                },
-            ]
+            todos: [],
+            text: "",
+            key: null
         }
     },
-    methods: {
-        addTodo() {
-            if (this.newTodo.trim().length == 0) { 
-                return;
-            }
-            this.todos.push({
-                id: this.idForTodo,
-                title: this.newTodo,
-                completed: false,
-            })
+    mounted() {
+        let db = firebase.database();
+        let me = this;
 
-            this.newTodo = ''
-            this.idForTodo++
+            db.ref('/todos').on('value', (snap) => {
+            let result = []
+            let data = snap.val();
+            for(let key in data){
+                result.push({ key: key, item: data[key] });
+            }
+            me.$set(me, 'todos', result);
+        });
+    },
+    methods: {
+        selectList(todo){
+            this.key = todo.key;
+            this.text = todo.item.text;
+        },
+        onSubmit() {
+            let db = firebase.database();
+            db.ref("/todos/" + Date.now()).set({
+                text: this.text    
+            }, (er) => {
+                if(er) {
+                    console.log(er.message);
+                } else {
+                    console.log('created');
+                }
+            });
+        },
+        onUpdate() {
+            let db = firebase.database();
+            db.ref("/todos/" + this.key).set({
+                text: this.text
+            }, (er) => {
+                console.log(er ? er.message : "updated");
+            })
+            this.key = null;
+            this.text = "";
         },
         removeTodo(index) { 
             this.todos.splice(index, 1)
