@@ -42,7 +42,7 @@
             
             <p class="login-register">
                 Уже есть аккаунт?
-                <router-link to="/login">Войти</router-link>
+                <router-link to="/Login">Войти</router-link>
             </p>
         </form>
     </div>    

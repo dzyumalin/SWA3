@@ -20,7 +20,7 @@
             <button class="button button_login" type="submit">Войти</button>
             <p class="login-register">
                 Нет аккаунта?
-                <router-link to="/register">Зарегистрироваться</router-link>
+                <router-link to="/Register">Зарегистрироваться</router-link>
             </p>
         </form>
         <div class="error" v-if="error">{{error.message}}</div>
@@ -31,7 +31,7 @@
 import * as firebase from "firebase/app"
 import "firebase/auth";
 export default {
-    name: 'login',
+    name: 'Login',
     data() {
         return {
             email: '',

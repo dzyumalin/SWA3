@@ -6,10 +6,10 @@
                 <li v-on:click="selectList(todo)">{{ todo.item.text }}</li>
                 <div class="remove-item">×</div>
             </ul>
-            <form v-show="key" v-on:sumbit.prevent="onUpdate" class="line-container">
+            <form>
                 <input type="text" class="task-input" placeholder="Что нужно сделать" v-model="text"> <!-- Добавить задачу -->
                 <label for="task-input">Срочное<input name="task-input" type="checkbox"></label>
-                <button class="button button_task" type="submit" @click="onSubmit">Добавить дело</button>
+                <button class="button button_task" type="submit" @click.prevent="onSubmit">Добавить дело</button>
             </form>
         </div>
     </div>
@@ -20,7 +20,7 @@ import * as firebase from "firebase/app";
 import "firebase/database";
 import "firebase/auth";
 export default {
-    name: 'task-list',
+    name: 'task',
     data() {
         return {
             todos: [],

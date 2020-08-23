@@ -45,7 +45,7 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if(!firebase.auth().currentUser) {
       next({
-        path: '/login',
+        path: '/Login',
         query: {
           redirect: to.fullPath
         }

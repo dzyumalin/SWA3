@@ -11,9 +11,9 @@
             <ul v-for="list in lists" :key="list.key">
                 <li v-on:click="selectList(list)">{{ list.item.text }}</li>
             </ul>
-            <form v-show="key" v-on:submit.prevent="onUpdate">
+            <form>
                 <input type="text" class="left-input" placeholder="Введите название списка" v-model="text"> <!-- Поле списка -->
-                <button class="button button_list" type="submit" @click="onSubmit">Добавить список</button>
+                <button class="button button_list" type="submit" @click.prevent="onSubmit">Добавить список</button>
             </form>
         </div>
         <Task></Task>

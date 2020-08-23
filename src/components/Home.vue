@@ -43,10 +43,6 @@ h1, h2, h3 {
   align-items: center;
 }
 
-.login {
-  display: none;
-}
-
 .container {
   display: flex;
   justify-content: space-between;
