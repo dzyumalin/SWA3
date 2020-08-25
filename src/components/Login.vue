@@ -48,8 +48,11 @@ export default {
                 console.log(data);
                 this.$router.replace({ name: "Home" });
             })
-            .catch(error => {
-                this.error = error;
+            // .catch(error => {
+            //     this.error = error;
+            // });
+            .catch(() => {
+            this.$store.commit('Error');
             });
         }
     }
